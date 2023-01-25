@@ -1,20 +1,51 @@
-﻿@{
+﻿@model List<StokViewModel>
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<form>
+<form method="post" asp-action="Index" asp-controller="Home">
   <div class="form-group">
     <label for="exampleInputEmail1">Mal Kodu</label>
-    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Mal Kodunu Giriniz">
+    <input type="text" name="MalKodu" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Mal Kodunu Giriniz">
   </div>
   <div class="form-group">
     <label for="exampleInputPassword1">Başlangıç Tarihi</label>
-    <input type="date" class="form-control" id="exampleInputPassword1" placeholder="Password">
+    <input name="BasTarih" type="text" class="form-control" id="exampleInputPassword1" >
   </div>
   <div class="form-group">
     <label for="exampleInputPassword1">Bitiş Tarihi</label>
-    <input type="date" class="form-control" id="exampleInputPassword1" placeholder="Password">
+    <input name="BitTarih" type="text" class="form-control" id="exampleInputPassword1" >
   </div>
   <button type="submit" class="btn btn-primary">Görüntüle</button>
 </form>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">SiraNo</th>
+      <th scope="col">IslemTuru</th>
+      <th scope="col">EvrakNo</th>
+      <th scope="col">Tarih</th>
+      <th scope="col">GirisMiktar</th>
+      <th scope="col">CikisMiktar</th>
+      <th scope="col">StokMiktar</th>
+    </tr>
+  </thead>
+  <tbody>
+      @foreach (var item in Model)
+        {
+       <tr>
+      <th scope="row">@item.SiraNum</th>
+      <td>@item.IslemTuru</td>
+      <td>@item.EvrakNo</td>
+      <td>@item.Tarih</td>
+      <td>@item.GirisMiktar</td>
+      <td>@item.CikisMiktar</td>
+      <td>@item.StokMiktar</td>
+    </tr>
+        }
+
+  </tbody>
+</table>
 

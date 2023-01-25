@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using StokEkstresi.ViewModel;
 
 #nullable disable
 
@@ -116,17 +117,14 @@ namespace StokEkstresi.Models
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
-        public IQueryable<View1> SearchCustomers(string MalKodu,int BasTarih,int BitTarih)
+        public IQueryable<View1> MalKodAra(string MalKodu,int BasTarih,int BitTarih)
         {
             SqlParameter pMalKodu = new SqlParameter("@MalKodu", MalKodu);
             SqlParameter pBasTarih = new SqlParameter("@BasTarih", BasTarih);
             SqlParameter pBitTarih = new SqlParameter("@BitTarih", BitTarih);
-            return this.View1s.FromSqlRaw("EXECUTE StokProcedure7 @MalKodu, @BasTarih, @BitTarih", pMalKodu, pBasTarih, pBitTarih);
-        }
-        public IQueryable<View1> MalKoduArama(string MalKodu)
-        {
-            SqlParameter pMalKodu = new SqlParameter("@MalKodu", MalKodu);
-            return this.View1s.FromSqlRaw("EXECUTE StokProcedure8 @MalKodu", pMalKodu);
+            var model = this.View1s.FromSqlRaw("EXECUTE StokEkstresiProcedure @MalKodu, @BasTarih, " +
+                "@BitTarih", pMalKodu, pBasTarih, pBitTarih);
+            return model;
         }
     }
 }
