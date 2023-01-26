@@ -1,3 +1,4 @@
+--Microsoft SQL Server'da kullanılan prosedür
 --Prosedür 3 tane parametre alıyor Malkodu, Başlangıç Tarihi, Bitiş Tarihi
 ALTER PROCEDURE StokEkstresi @MalKodu varchar(30), @BasTarih int, @BitTarih int
 AS
@@ -7,6 +8,19 @@ select ROW_NUMBER()  OVER (ORDER BY  Tarih) As SiraNum, (CASE WHEN IslemTur = 0 
 	(CASE WHEN IslemTur = 0 THEN BaseTable.Miktar ELSE 0 END) AS GirisMiktar, 
 	(CASE WHEN IslemTur = 1 THEN BaseTable.Miktar ELSE 0 END) AS CikisMiktar,
 --Alt Sorguda Tablodaki stok verilerin toplamının alınması
+(select SUM((CASE WHEN IslemTur = 0 THEN SubTable.Miktar ELSE SubTable.Miktar*(-1) END)) from View_1 SubTable 
+where MalKodu = @MalKodu AND Tarih Between @BasTarih AND @BitTarih AND (SubTable.SiraNo <= BaseTable.SiraNo )) As StokMiktar
+from View_1 BaseTable where MalKodu = @MalKodu AND Tarih Between @BasTarih AND @BitTarih
+
+--C# için kullanılan prosedür
+ALTER PROCEDURE [dbo].[StokEkstresiProcedure] @MalKodu varchar(30), @BasTarih int, @BitTarih int
+AS
+--Üst Sorguda SıraNumarası gelen verilerin tarihine göre sıralanıyor
+select ROW_NUMBER()  OVER (ORDER BY  Tarih) As SiraNum,ID, IslemTur, EvrakNo,
+	Tarih,
+	Miktar,
+	SiraNo,
+	MalKodu,
 (select SUM((CASE WHEN IslemTur = 0 THEN SubTable.Miktar ELSE SubTable.Miktar*(-1) END)) from View_1 SubTable 
 where MalKodu = @MalKodu AND Tarih Between @BasTarih AND @BitTarih AND (SubTable.SiraNo <= BaseTable.SiraNo )) As StokMiktar
 from View_1 BaseTable where MalKodu = @MalKodu AND Tarih Between @BasTarih AND @BitTarih
